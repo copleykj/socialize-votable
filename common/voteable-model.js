@@ -5,7 +5,7 @@ VoteableModel.makeVoteable = function(model, type) {
     if(model.appendSchema && type){
         model.appendSchema(VoteableSchema);
         LinkableModel.registerLinkableType(model, type);
-        _.extend(model.prototype, likeableMethods);
+        _.extend(model.prototype, voteableMethods);
     }else {
         throw new Meteor.Error("makeVoteableFailed", "Could not make model voteable. Please make sure you passed in a model and type");
     }
@@ -13,7 +13,7 @@ VoteableModel.makeVoteable = function(model, type) {
 
 var voteableMethods = {
     /**
-     * Add a record to the likes collection which is linked to the model
+     * up vote on the model
      */
     upVote: function () {
         var type = this._objectType;

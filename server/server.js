@@ -10,8 +10,12 @@ VotesCollection.allow({
 VotesCollection.before.insert(function(userId, vote){
     var currentVote = VotesCollection.findOne({userId:userId, linkedObjectId:vote.linkedObjectId});
     if(currentVote){
-        currentVote.update({$set:{direction:vote.direction}});
-        return false;
+        if(vote.direction !== currentVote.direction){
+            currentVote.update({$set:{direction:vote.direction}});
+            return false;
+        }else{
+            return false;
+        }
     }
 });
 
@@ -28,6 +32,6 @@ VotesCollection.after.insert(function (userId, vote) {
 });
 
 VotesCollection.after.remove(function (userId, vote) {
-    var collection = LinkableModel.getCollectionForRegisteredType(like.objectType);
-    userId && collection && collection.update(vote.linkedObjectId, {$inc:{_likeCount:-1}});
+    var collection = LinkableModel.getCollectionForRegisteredType(vote.objectType);
+    userId && collection && collection.update(vote.linkedObjectId, {$inc:{_voteScore:-vote.direction}});
 });
