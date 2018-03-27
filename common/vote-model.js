@@ -8,6 +8,32 @@ import SimpleSchema from 'simpl-schema';
 
 export const VotesCollection = new Mongo.Collection('socialize:votes');
 
+if (VotesCollection.configureRedisOplog) {
+    VotesCollection.configureRedisOplog({
+        mutation(options, { selector, doc }) {
+            let linkedObjectId = (selector && selector.linkedObjectId) || (doc && doc.linkedObjectId);
+
+            if (!linkedObjectId && selector._id) {
+                const vote = VotesCollection.findOne({ _id: selector._id }, { fields: { linkedObjectId: 1 } });
+                linkedObjectId = vote && vote.linkedObjectId;
+            }
+
+            if (linkedObjectId) {
+                Object.assign(options, {
+                    namespace: linkedObjectId,
+                });
+            }
+        },
+        cursor(options, selector) {
+            if (selector.linkedObjectId) {
+                Object.assign(options, {
+                    namespace: selector.linkedObjectId,
+                });
+            }
+        },
+    });
+}
+
 /**
  * A representation of a vote record
  * @extends LinkableModel
