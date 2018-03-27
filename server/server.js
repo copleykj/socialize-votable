@@ -1,7 +1,3 @@
-/* eslint-disable import/no-unresolved */
-import { LinkableModel } from 'meteor/socialize:linkable-model';
-/* eslint-enable import/no-unresolved */
-
 import { VotesCollection } from '../common/vote-model';
 
 VotesCollection.allow({
@@ -26,18 +22,18 @@ VotesCollection.before.insert(function beforeInsert(userId, vote) {
 });
 
 VotesCollection.after.update(function afterUpdate(userId, vote) {
-    const collection = LinkableModel.getCollectionForRegisteredType(vote.objectType);
+    const collection = this.transform().getCollectionForParentLink(vote.objectType);
 
-    userId && collection && collection.update(vote.linkedObjectId, { $inc: { _voteScore: vote.direction * 2 } });
+    userId && collection && collection.update(vote.linkedObjectId, { $inc: { voteScore: vote.direction * 2 } });
 }, { fetchPrevious: false });
 
 VotesCollection.after.insert(function afterInsert(userId, vote) {
-    const collection = LinkableModel.getCollectionForRegisteredType(vote.objectType);
+    const collection = this.transform().getCollectionForParentLink(vote.objectType);
 
-    userId && collection && collection.update(vote.linkedObjectId, { $inc: { _voteScore: vote.direction } });
+    userId && collection && collection.update(vote.linkedObjectId, { $inc: { voteScore: vote.direction } });
 });
 
 VotesCollection.after.remove(function afterRemove(userId, vote) {
-    const collection = LinkableModel.getCollectionForRegisteredType(vote.objectType);
-    userId && collection && collection.update(vote.linkedObjectId, { $inc: { _voteScore: -vote.direction } });
+    const collection = this.transform().getCollectionForParentLink(vote.objectType);
+    userId && collection && collection.update(vote.linkedObjectId, { $inc: { voteScore: -vote.direction } });
 });
