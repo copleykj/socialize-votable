@@ -29,11 +29,39 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
     }
 
     /**
-     * Get all the votes for the model
-     * @returns {Mongo.Cursor} A mongo cursor which returns Like instances
+     * Get the votes for an instance of VoteableModel
+     * @param  {Object} [options={}] Options to pass to the Cursor
+     * @return {Vote}              [
      */
-    votes() {
-        return VotesCollection.find(this.getLinkObject());
+    votes(options = {}) {
+        return VotesCollection.find(this.getLinkObject(), options);
+    }
+
+    /**
+     * Check if a user has voted on an instance of VotableModel
+     * @param  {[type]}  user [description]
+     * @return {Boolean}      [description]
+     */
+    isVotedOnBy(user) {
+        return VotesCollection.findOne({ userId: user._id, ...this.getLinkObject() });
+    }
+
+    /**
+     * Check if a user has up voted an instance of VotableModel
+     * @param  {[type]}  user [description]
+     * @return {Boolean}      [description]
+     */
+    isUpVotedBy(user) {
+        return VotesCollection.findOne({ userId: user._id, direction: 1, ...this.getLinkObject() });
+    }
+
+    /**
+     * Check if a user has down voted an instance of VotableModel
+     * @param  {[type]}  user [description]
+     * @return {Boolean}      [description]
+     */
+    isDownVotedBy(user) {
+        return VotesCollection.findOne({ userId: user._id, direction: 1, ...this.getLinkObject() });
     }
 };
 
