@@ -1,57 +1,50 @@
+/* eslint-disable import/no-unresolved */
+import { Meteor } from 'meteor/meteor';
+import { LinkParent } from 'meteor/socialize:linkable-model';
+import SimpleSchema from 'simpl-schema';
 
-VoteableModel = {};
+import { Vote, VotesCollection } from './vote-model.js';
 
-VoteableModel.makeVoteable = function(model, type) {
-    if(model.appendSchema && type){
-        model.appendSchema(VoteableSchema);
-        LinkableModel.registerLinkableType(model, type);
-        _.extend(model.prototype, voteableMethods);
-    }else {
-        throw new Meteor.Error("makeVoteableFailed", "Could not make model voteable. Please make sure you passed in a model and type");
+export const VoteableModel = Base => class extends Base { // eslint-disable-line
+    constructor(document) {
+        super(document);
+        if (!(this instanceof LinkParent)) {
+            throw new Meteor.Error('MustExtendParentLink', 'LikeableModel must extend LinkParent from socialize:linkable-model');
+        }
     }
-};
-
-var voteableMethods = {
     /**
      * up vote on the model
      */
-    upVote: function () {
-        var type = this._objectType;
-        new Vote({direction:1, linkedObjectId:this._id, userId:Meteor.userId(), objectType:type}).save();
-    },
+    upVote() {
+        const linkObject = this.getLinkObject();
+        new Vote({ direction: 1, ...linkObject }).save();
+    }
 
     /**
      * Down vote on the model
      */
-    downVote: function () {
-        var type = this._objectType;
-        new Vote({direction:-1, linkedObjectId:this._id, userId:Meteor.userId(), objectType:type}).save();
-    },
+    downVote() {
+        const linkObject = this.getLinkObject();
+        new Vote({ direction: -1, ...linkObject }).save();
+    }
 
     /**
      * Get all the votes for the model
      * @returns {Mongo.Cursor} A mongo cursor which returns Like instances
      */
-    votes: function () {
-        return VotesCollection.find({linkedObjectId:this._id});
-    },
-
-    /**
-     * Get the score total for all the votes
-     * @returns {Number} The vote score
-     */
-    voteScore: function() {
-        return this._voteScore || 0;
+    votes() {
+        return VotesCollection.find(this.getLinkObject());
     }
 };
 
-//a schema which can be attached to other voteable types
-//if you extend a model with VoteableModel you will need to
-//attach this schema to it's collection as well.
-var VoteableSchema = new SimpleSchema({
-    _voteScore: {
-        type:Number,
-        defaultValue:0,
-        custom: SimpleSchema.denyUntrusted
-    }
+
+// a schema which can be attached to other voteable types
+// if you extend a model with VoteableModel you will need to
+// attach this schema to it's collection as well.
+VoteableModel.VoteableSchema = new SimpleSchema({
+    voteScore: {
+        type: Number,
+        defaultValue: 0,
+        custom: SimpleSchema.denyUntrusted,
+    },
 });
