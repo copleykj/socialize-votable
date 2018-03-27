@@ -79,6 +79,7 @@ export const VoteSchema = new SimpleSchema({
             }
             return undefined;
         },
+        denyUpdate: true,
     },
     direction: {
         type: Number,
