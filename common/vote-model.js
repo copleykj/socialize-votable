@@ -1,51 +1,65 @@
-/**
- * A model of a vote which is connected to another database object
- * @class Vote
- */
-Vote = BaseModel.extendAndSetupCollection("votes");
+/* eslint-disable import/no-unresolved */
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { BaseModel } from 'meteor/socialize:base-model';
+import { LinkableModel } from 'meteor/socialize:linkable-model';
+import SimpleSchema from 'simpl-schema';
+/* eslint-enable import/no-unresolved */
 
-LinkableModel.makeLinkable(Vote);
-
-/**
- * Get the User instance of the account which created the vote
- * @returns {User} The user who created the vote
- */
-Vote.prototype.user = function () {
-    return Meteor.users.findOne(this.userId);
-};
+export const VotesCollection = new Mongo.Collection('socialize:votes');
 
 /**
- * Check if the user has already voted on the linked object
- * @returns {[[Type]]} [[Description]]
+ * A representation of a vote record
+ * @extends LinkableModel
  */
-Vote.prototype.isDuplicate = function () {
-    return !!VotesCollection.findOne({userId:this.userId, linkedObjectId:this.linkedObjectId});
-};
-
-VotesCollection = Vote.collection;
-
-//create the schema for a vote
-Vote.appendSchema({
-    "userId":{
-        type:String,
-        regEx:SimpleSchema.RegEx.Id,
-        autoValue:function () {
-            if(this.isInsert){
-                return Meteor.userId();
-            }
-        },
-        denyUpdate:true
-    },
-    "date":{
-        type:Date,
-        autoValue:function() {
-            return new Date();
-        }
-    },
-    "direction": {
-        type: Number,
-        allowedValues:[1, -1]
+export class Vote extends LinkableModel(BaseModel) {
+    /**
+     * Get the user who voted on the linked objectType
+     * @return {user} The user instance that voted
+     */
+    user() {
+        return Meteor.users.findOne(this.userId);
     }
+    /**
+     * Check if the user has already voted on the linked object
+     * @return {Boolean} [description]
+     */
+    isDuplicate() {
+        return !!VotesCollection.findOne({ userId: this.userId, linkedObjectId: this.linkedObjectId });
+    }
+}
+
+// attach the votes collection
+Vote.attachCollection(VotesCollection);
+
+// create the schema for a vote
+export const VoteSchema = new SimpleSchema({
+    userId: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        autoValue() {
+            if (this.isInsert) {
+                return this.userId;
+            }
+            return undefined;
+        },
+        denyUpdate: true,
+    },
+    createdAt: {
+        type: Date,
+        autoValue() {
+            if (this.isInsert) {
+                return new Date();
+            }
+            return undefined;
+        },
+    },
+    direction: {
+        type: Number,
+        allowedValues: [1, -1],
+    },
 });
 
-Vote.appendSchema(LinkableModel.LinkableSchema);
+Vote.attachSchema(VoteSchema);
+
+Vote.attachSchema(LinkableModel.LinkableSchema);
