@@ -9,7 +9,11 @@ Package.describe({
 Package.onUse(function _(api) {
     api.versionsFrom('1.3');
 
-    api.use('socialize:linkable-model@1.0.1');
+    api.use([
+        'socialize:linkable-model@1.0.1',
+        'socialize:user-blocking@1.0.0',
+        'reywood:publish-composite@1.5.2',
+    ]);
 
     api.imply('socialize:linkable-model');
 
