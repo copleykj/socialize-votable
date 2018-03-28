@@ -29,6 +29,14 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
     }
 
     /**
+     * Remove a vote from the model
+     */
+    unVote() {
+        const linkObject = this.getLinkObject();
+        VotesCollection.remove({ userId: Meteor.userId(), ...linkObject });
+    }
+
+    /**
      * Get the votes for an instance of VoteableModel
      * @param  {Object} [options={}] Options to pass to the Cursor
      * @return {Vote}              [
