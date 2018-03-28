@@ -25,17 +25,12 @@ publishComposite('socialize.votesFor', function publishCommentsFor(linkedObjectI
 
         return {
             find() {
-                return CommentsCollection.find({ linkedObjectId, userId: { $nin: blockIds } }, options);
+                return VotesCollection.find({ linkedObjectId, userId: { $nin: blockIds } }, options);
             },
             children: [
                 {
-                    find(comment) {
-                        return Meteor.users.find({ _id: comment.userId });
-                    },
-                },
-                {
-                    find(comment) {
-                        return LikesCollection.find({ ...comment.getLinkObject, userId: this.userId });
+                    find(vote) {
+                        return Meteor.users.find({ _id: vote.userId });
                     },
                 },
             ],
