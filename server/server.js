@@ -1,4 +1,5 @@
 import { VotesCollection } from '../common/vote-model';
+import './publications.js';
 
 VotesCollection.allow({
     insert(userId, vote) {
