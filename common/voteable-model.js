@@ -5,6 +5,10 @@ import SimpleSchema from 'simpl-schema';
 
 import { Vote, VotesCollection } from './vote-model.js';
 
+/**
+ * An Abstract class to implement votable behavior in a model
+ * @param {class} Base The class to recieve the votable behavior
+ */
 export const VoteableModel = Base => class extends Base { // eslint-disable-line
     constructor(document) {
         super(document);
@@ -14,6 +18,8 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
     }
     /**
      * up vote on the model
+     * @method VotableModel.upVote
+     * @return {undefined}
      */
     upVote() {
         const linkObject = this.getLinkObject();
@@ -22,6 +28,8 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
 
     /**
      * Down vote on the model
+     * @method VotableModel.downVote
+     * @return {undefined}
      */
     downVote() {
         const linkObject = this.getLinkObject();
@@ -30,6 +38,8 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
 
     /**
      * Remove a vote from the model
+     * @method VotableModel.unVote
+     * @return {undefined}
      */
     unVote() {
         const linkObject = this.getLinkObject();
@@ -38,6 +48,7 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
 
     /**
      * Get the votes for an instance of VoteableModel
+     * @method VoteableModel.votes
      * @param  {Object} [options={}] Options to pass to the Cursor
      * @return {Vote}              [
      */
@@ -47,20 +58,22 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
 
     /**
      * Check if a user has voted on an instance of VotableModel
+     * @method VoteableModel.isVotedOnBy
      * @param  {[type]}  user [description]
      * @return {Boolean}      [description]
      */
-    isVotedOnBy(user) {
-        return VotesCollection.findOne({ userId: user._id, ...this.getLinkObject() });
+    isVotedOnBy(userId = Meteor.userId()) {
+        return VotesCollection.findOne({ userId, ...this.getLinkObject() });
     }
 
     /**
      * Check if a user has up voted an instance of VotableModel
-     * @param  {[type]}  user [description]
+     * @method VoteableModel.isUpVotedBy
+     * @param  {User}  user [description]
      * @return {Boolean}      [description]
      */
-    isUpVotedBy(user) {
-        return VotesCollection.findOne({ userId: user._id, direction: 1, ...this.getLinkObject() });
+    isUpVotedBy(userId = Meteor.userId()) {
+        return VotesCollection.findOne({ userId, direction: 1, ...this.getLinkObject() });
     }
 
     /**
@@ -68,8 +81,8 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
      * @param  {[type]}  user [description]
      * @return {Boolean}      [description]
      */
-    isDownVotedBy(user) {
-        return VotesCollection.findOne({ userId: user._id, direction: 1, ...this.getLinkObject() });
+    isDownVotedBy(userId = Meteor.userId()) {
+        return VotesCollection.findOne({ userId, direction: 1, ...this.getLinkObject() });
     }
 };
 
