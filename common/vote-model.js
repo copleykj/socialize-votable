@@ -6,6 +6,10 @@ import { LinkableModel } from 'meteor/socialize:linkable-model';
 import SimpleSchema from 'simpl-schema';
 /* eslint-enable import/no-unresolved */
 
+/**
+ * Collection where votes are stored
+ * @type {Mongo.Collection}
+ */
 export const VotesCollection = new Mongo.Collection('socialize:votes');
 
 if (VotesCollection.configureRedisOplog) {
@@ -41,6 +45,7 @@ if (VotesCollection.configureRedisOplog) {
 export class Vote extends LinkableModel(BaseModel) {
     /**
      * Get the user who voted on the linked objectType
+     * @method Vote.user
      * @return {user} The user instance that voted
      */
     user() {
@@ -48,7 +53,8 @@ export class Vote extends LinkableModel(BaseModel) {
     }
     /**
      * Check if the user has already voted on the linked object
-     * @return {Boolean} [description]
+     * @method Vote.isDuplicate
+     * @return {Boolean} Whether or not there is a duplicate vote
      */
     isDuplicate() {
         return !!VotesCollection.findOne({ userId: this.userId, linkedObjectId: this.linkedObjectId });
@@ -58,7 +64,10 @@ export class Vote extends LinkableModel(BaseModel) {
 // attach the votes collection
 Vote.attachCollection(VotesCollection);
 
-// create the schema for a vote
+/**
+ * Schema describing the data structure for a vote
+ * @type {SimpleSchema}
+ */
 export const VoteSchema = new SimpleSchema({
     userId: {
         type: String,
