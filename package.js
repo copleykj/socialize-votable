@@ -2,7 +2,7 @@
 Package.describe({
     name: 'socialize:voteable',
     summary: 'A package for implementing social up/down style voting',
-    version: '1.0.0',
+    version: '1.0.1',
     git: 'https://github.com/copleykj/socialize-voteable.git',
 });
 
