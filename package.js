@@ -18,5 +18,5 @@ Package.onUse(function _(api) {
     api.imply('socialize:linkable-model');
 
     api.mainModule('server/server.js', 'server');
-    api.mainModule('common/common.js');
+    api.mainModule('common/common.js', 'client');
 });
