@@ -20,8 +20,8 @@ $ meteor add socialize:voteable
 
 ```javascript
 import { Mongo } from 'meteor/mongo';
-import { VoteableModel } from 'meteor/socialize-commentable';
-import { LinkParent, LinkableModel } from 'meteor/socialize-linkable';
+import { VoteableModel } from 'meteor/socialize:voteable';
+import { LinkParent, LinkableModel } from 'meteor/socialize:linkable';
 import SimpleSchema from 'simpl-schema';
 
 //define the collection to hold photos

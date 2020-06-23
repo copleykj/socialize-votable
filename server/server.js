@@ -39,4 +39,5 @@ VotesCollection.after.remove(function afterRemove(userId, vote) {
     userId && collection && collection.update(vote.linkedObjectId, { $inc: { voteScore: -vote.direction } });
 });
 
+export { VoteableModel } from '../common/voteable-model.js';
 export { Vote, VotableModel, VotesCollection };
