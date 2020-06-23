@@ -82,7 +82,7 @@ export const VoteableModel = Base => class extends Base { // eslint-disable-line
      * @return {Boolean}      [description]
      */
     isDownVotedBy(userId = Meteor.userId()) {
-        return VotesCollection.findOne({ userId, direction: 1, ...this.getLinkObject() });
+        return VotesCollection.findOne({ userId, direction: -1, ...this.getLinkObject() });
     }
 };
 
