@@ -1,4 +1,4 @@
-import { Vote, VotableModel, VotesCollection } from '../common/vote-model';
+import { Vote, VotableModel, VotesCollection } from '../common/common';
 import './publications.js';
 
 VotesCollection.allow({
