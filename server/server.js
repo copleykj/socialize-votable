@@ -1,4 +1,4 @@
-import { Vote, VotableModel, VotesCollection } from '../common/common';
+import { Vote, VoteableModel, VotesCollection } from '../common/common';
 import './publications.js';
 
 VotesCollection.allow({
@@ -39,4 +39,4 @@ VotesCollection.after.remove(function afterRemove(userId, vote) {
     userId && collection && collection.update(vote.linkedObjectId, { $inc: { voteScore: -vote.direction } });
 });
 
-export { Vote, VotableModel, VotesCollection };
+export { Vote, VoteableModel, VotesCollection };
