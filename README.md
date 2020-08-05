@@ -1,22 +1,28 @@
-# Voteable #
+# Voteable
 
 This package enables the creation of models that can be up/down voted. For example you may want users to be able to vote on photos, posts, or any number of other things that you wish to model. Rather than maintaining a collection for votes on photos and a collection for votes on posts, we can implement VoteableModel on our `Post` and `Photo` models and then use it's new methods to store and retrieve votes and information about them, linked to these models.
 
-## Supporting the Project ##
-In the spirit of keeping this and all of the packages in the [Socialize](https://atmospherejs.com/socialize) set alive, I ask that if you find this package useful, please donate to it's development.
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+- [Supporting The Project](#supporting-the-project)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Scalability - Redis Oplog](#scalability---redis-oplog)
+<!-- /TOC -->
 
-Litecoin: LXLBD9sC5dV79eQkwj7tFusUHvJA5nhuD3 / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
+## Supporting The Project
 
-## Installation ##
+Finding the time to maintain FOSS projects can be quite difficult. I am myself responsible for over 30 personal projects across 2 platforms, as well as Multiple others maintained by the [Meteor Community Packages](https://github.com/meteor-community-packages) organization. Therfore, if you appreciate my work, I ask that you either sponsor my work through GitHub, or donate via Paypal or Patreon. Every dollar helps give cause for spending my free time fielding issues, feature requests, pull requests and releasing updates. Info can be found in the "Sponsor this project" section of the [GitHub Repo](https://github.com/copleykj/socialize-voteable)
+
+## Installation
 
 This package relies on the npm package `simpl-schema` so you will need to make sure it is installed as well.
 
 ```shell
-$ meteor npm install --save simpl-schema
-$ meteor add socialize:voteable
+meteor npm install --save simpl-schema
+meteor add socialize:voteable
 ```
 
-## Basic Usage ##
+## Basic Usage
 
 ```javascript
 import { Mongo } from 'meteor/mongo';
@@ -85,7 +91,7 @@ newPhoto.unVote();
 
 For a more in depth explanation of how to use this package see [API.md](API.md)
 
-## Scalability - Redis Oplog ##
+## Scalability - Redis Oplog
 
 This package contains a preliminary implementation of [cultofcoders:redis-oplog][1]'s namespaces to provide reactive scalability as an alternative to Meteor's `livedata`. Use of redis-oplog is not required and will not engage until you install the [cultofcoders:redis-oplog][1] package and configure it.
 
