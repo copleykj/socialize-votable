@@ -11,7 +11,7 @@ Package.onUse(function _(api) {
 
     api.use([
         'socialize:linkable-model@1.0.4',
-        'socialize:user-blocking@1.0.3',
+        'socialize:user-blocking@1.0.4',
         'reywood:publish-composite@1.7.3',
     ]);
 
